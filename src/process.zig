@@ -159,3 +159,4 @@ pub const Process = struct {
         }
     }
 };
+// restart_count is logged with each restart event so the operator can track flapping
