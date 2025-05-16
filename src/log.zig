@@ -110,3 +110,4 @@ fn rotate(self: *Logger) !void {
         self.log(.err, service, fmt, args);
     }
 };
+// mutex covers allocPrint + writeAll together to keep log lines from interleaving
