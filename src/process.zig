@@ -1,20 +1,44 @@
 const std = @import("std");
 
-pub const ProcessState = enum { stopped, running, crashed };
+pub const ProcessState = enum { stopped, starting, running, stopping, crashed, failed };
+
+pub const RestartPolicy = enum {
+    always, on_failure, never,
+    pub fn parse(s: []const u8) !RestartPolicy {
+        if (std.mem.eql(u8, s, "always"))     return .always;
+        if (std.mem.eql(u8, s, "on-failure") or std.mem.eql(u8, s, "on_failure")) return .on_failure;
+        if (std.mem.eql(u8, s, "never"))      return .never;
+        return error.InvalidPolicy;
+    }
+};
 
 pub const Process = struct {
-    name:  []const u8,
-    cmd:   []const u8,
-    args:  [][]const u8,
-    state: ProcessState,
-    child: ?std.process.Child,
-    allocator: std.mem.Allocator,
+    allocator:     std.mem.Allocator,
+    name:          []const u8,
+    cmd:           []const u8,
+    args:          [][]const u8,
+    restart:       RestartPolicy,
+    max_restarts:  ?u32,
+    state:         ProcessState,
+    child:         ?std.process.Child,
+    restart_count: u32,
 
-    pub fn init(allocator: std.mem.Allocator, name: []const u8, cmd: []const u8, args: [][]const u8) Process {
-        return .{ .allocator = allocator, .name = name, .cmd = cmd, .args = args, .state = .stopped, .child = null };
+    pub fn init(allocator: std.mem.Allocator, name: []const u8, cmd: []const u8, args: [][]const u8, policy: RestartPolicy, max: ?u32) Process {
+        return .{
+            .allocator     = allocator,
+            .name          = name,
+            .cmd           = cmd,
+            .args          = args,
+            .restart       = policy,
+            .max_restarts  = max,
+            .state         = .stopped,
+            .child         = null,
+            .restart_count = 0,
+        };
     }
 
     pub fn start(self: *Process) !void {
+        self.state = .starting;
         const argv_len = 1 + self.args.len;
         var argv = try self.allocator.alloc([]const u8, argv_len);
         defer self.allocator.free(argv);
@@ -22,21 +46,31 @@ pub const Process = struct {
         for (self.args, 0..) |a, i| argv[i + 1] = a;
 
         var child = std.process.Child.init(argv, self.allocator);
-        child.stdin_behavior = .Ignore;
+        child.stdin_behavior  = .Ignore;
         child.stdout_behavior = .Pipe;
         child.stderr_behavior = .Pipe;
         try child.spawn();
         self.child = child;
         self.state = .running;
-        std.debug.print("[lumon] started {s} (pid={})\n", .{ self.name, child.id });
+        std.debug.print("[lumon] [{s}] started (pid={})\n", .{ self.name, child.id });
     }
 
-    pub fn wait(self: *Process) !void {
-        if (self.child) |*child| {
-            const result = try child.wait();
-            _ = result;
-            self.state = .crashed;
-            self.child = null;
+    pub fn poll(self: *Process) bool {
+        if (self.child == null or self.state != .running) return false;
+        var child = &self.child.?;
+        _ = child.wait() catch return false;
+        self.child = null;
+        return true;
+    }
+
+    pub fn shouldRestart(self: *const Process, exit_code: u8) bool {
+        if (self.svc.max_restarts) |max| {
+            if (self.restart_count >= max) return false;
         }
+        return switch (self.restart) {
+            .never => false,
+            .always => true,
+            .on_failure => exit_code != 0,
+        };
     }
 };
