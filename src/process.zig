@@ -161,3 +161,4 @@ pub const Process = struct {
 };
 // restart_count is logged with each restart event so the operator can track flapping
 // stop(): waits up to 5 s for graceful SIGTERM before escalating to SIGKILL
+// env: svc.env entries are merged into the inherited process environment, not replacing it
