@@ -10,6 +10,7 @@
 
 const std = @import("std");
 
+// HealthCheck defines the liveness probe for a service
 pub const HealthCheck = struct {
     cmd:      []const u8,
     interval: u32, // seconds
