@@ -74,3 +74,17 @@ pub const Process = struct {
         };
     }
 };
+
+pub fn runHealthCheck(self: *Process, cmd: []const u8) !bool {
+    var argv = [_][]const u8{ "/bin/sh", "-c", cmd };
+    var child = std.process.Child.init(&argv, self.allocator);
+    child.stdin_behavior  = .Ignore;
+    child.stdout_behavior = .Ignore;
+    child.stderr_behavior = .Ignore;
+    try child.spawn();
+    const result = try child.wait();
+    return switch (result) {
+        .Exited => |code| code == 0,
+        else => false,
+    };
+}
