@@ -163,3 +163,4 @@ pub const Process = struct {
 // stop(): waits up to 5 s for graceful SIGTERM before escalating to SIGKILL
 // env: svc.env entries are merged into the inherited process environment, not replacing it
 // pre_stop hook: command string is logged at INFO before spawning to aid debugging
+// reapZombies: should be called periodically from the supervisor loop to avoid PID exhaustion
