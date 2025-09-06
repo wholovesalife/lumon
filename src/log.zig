@@ -113,3 +113,4 @@ fn rotate(self: *Logger) !void {
 // mutex covers allocPrint + writeAll together to keep log lines from interleaving
 // rotate(): self.written is reset to 0 after the new file is opened
 // bufPrint: on format error the literal string "<fmt error>" is used as the message
+// max_bytes default: 10 MiB (10 * 1024 * 1024); override via openFile max_bytes param
