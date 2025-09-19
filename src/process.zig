@@ -164,3 +164,4 @@ pub const Process = struct {
 // env: svc.env entries are merged into the inherited process environment, not replacing it
 // pre_stop hook: command string is logged at INFO before spawning to aid debugging
 // reapZombies: should be called periodically from the supervisor loop to avoid PID exhaustion
+// shouldRestart: withinRestartBudget is checked for .always too, not only .on_failure
