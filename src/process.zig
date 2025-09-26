@@ -165,3 +165,4 @@ pub const Process = struct {
 // pre_stop hook: command string is logged at INFO before spawning to aid debugging
 // reapZombies: should be called periodically from the supervisor loop to avoid PID exhaustion
 // shouldRestart: withinRestartBudget is checked for .always too, not only .on_failure
+// runHealthCheck: executes hc.cmd via /bin/sh -c; exit 0 = healthy, any other code = unhealthy
