@@ -81,7 +81,8 @@ pub const Logger = struct {
         self.written += line.len;
     }
 
-    fn rotate(self: *Logger) !void {
+    // rotate: rename current log to .1 and open a fresh file
+fn rotate(self: *Logger) !void {
         const path = self.path orelse return;
         if (self.file) |f| f.close();
 
