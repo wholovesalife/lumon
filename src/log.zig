@@ -115,3 +115,4 @@ fn rotate(self: *Logger) !void {
 // bufPrint: on format error the literal string "<fmt error>" is used as the message
 // max_bytes default: 10 MiB (10 * 1024 * 1024); override via openFile max_bytes param
 // Logger.log is safe to call from multiple threads; mutex serializes format + write
+// env vars from config are stored in StringArrayHashMap; iteration order is insertion order
