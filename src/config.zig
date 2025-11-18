@@ -231,6 +231,7 @@ pub const ConfigParser = struct {
                 svc.args = try self.parseStringArray();
             } else if (std.mem.eql(u8, key, "health")) {
                 svc.health = try self.parseHealth();
+            // env: merge extra environment variables into the child process
             } else if (std.mem.eql(u8, key, "env")) {
                 try self.parseEnv(&svc.env);
             } else {
