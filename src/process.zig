@@ -167,3 +167,4 @@ pub const Process = struct {
 // shouldRestart: withinRestartBudget is checked for .always too, not only .on_failure
 // runHealthCheck: executes hc.cmd via /bin/sh -c; exit 0 = healthy, any other code = unhealthy
 // poll(): calls child.wait() which on POSIX uses waitpid; returns false if child still alive
+// withinRestartBudget: null max_restarts means unlimited restarts (always returns true)
