@@ -88,3 +88,13 @@ pub fn runHealthCheck(self: *Process, cmd: []const u8) !bool {
         else => false,
     };
 }
+
+// reapZombies: non-blocking wait to prevent zombie accumulation
+pub fn reapZombies(allocator: std.mem.Allocator) void {
+    _ = allocator;
+    // On POSIX systems, waitpid with WNOHANG reaps any exited child
+    while (true) {
+        const result = std.posix.waitpid(-1, std.posix.W.NOHANG) catch return;
+        if (result.pid == 0) break; // no more zombies
+    }
+}
