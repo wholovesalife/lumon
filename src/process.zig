@@ -168,3 +168,4 @@ pub const Process = struct {
 // runHealthCheck: executes hc.cmd via /bin/sh -c; exit 0 = healthy, any other code = unhealthy
 // poll(): calls child.wait() which on POSIX uses waitpid; returns false if child still alive
 // withinRestartBudget: null max_restarts means unlimited restarts (always returns true)
+// start(): child.id is valid immediately after spawn(); self.pid is set from child.id
