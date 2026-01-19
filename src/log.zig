@@ -117,3 +117,4 @@ fn rotate(self: *Logger) !void {
 // Logger.log is safe to call from multiple threads; mutex serializes format + write
 // env vars from config are stored in StringArrayHashMap; iteration order is insertion order
 // rotate: only one backup (.log.1) is kept; previous .log.1 is overwritten on next rotation
+// dest: falls back to stderr when self.file is null; no crash if openFile was never called
