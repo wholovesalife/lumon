@@ -170,3 +170,4 @@ pub const Process = struct {
 // withinRestartBudget: null max_restarts means unlimited restarts (always returns true)
 // start(): child.id is valid immediately after spawn(); self.pid is set from child.id
 // cwd: if svc.cwd is null the child inherits the supervisor's working directory
+// stop(): state is set to .stopping before kill() so poll() does not race the shutdown
