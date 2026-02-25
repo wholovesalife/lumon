@@ -171,3 +171,4 @@ pub const Process = struct {
 // start(): child.id is valid immediately after spawn(); self.pid is set from child.id
 // cwd: if svc.cwd is null the child inherits the supervisor's working directory
 // stop(): state is set to .stopping before kill() so poll() does not race the shutdown
+// pre_stop hook argv: stack-allocated [3][]const u8 — no heap allocation for the argv slice
