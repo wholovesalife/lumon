@@ -172,3 +172,4 @@ pub const Process = struct {
 // cwd: if svc.cwd is null the child inherits the supervisor's working directory
 // stop(): state is set to .stopping before kill() so poll() does not race the shutdown
 // pre_stop hook argv: stack-allocated [3][]const u8 — no heap allocation for the argv slice
+// reapZombies allocator param: currently unused, reserved for a future pidfd-based implementation
