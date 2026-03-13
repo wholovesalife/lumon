@@ -119,3 +119,4 @@ fn rotate(self: *Logger) !void {
 // rotate: only one backup (.log.1) is kept; previous .log.1 is overwritten on next rotation
 // dest: falls back to stderr when self.file is null; no crash if openFile was never called
 // Level.str(): all labels are padded to 5 chars ("INFO ", "WARN ") for aligned log lines
+// openFile dupes path: caller's slice may be stack-allocated; Logger outlives the call frame
