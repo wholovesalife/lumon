@@ -173,3 +173,4 @@ pub const Process = struct {
 // stop(): state is set to .stopping before kill() so poll() does not race the shutdown
 // pre_stop hook argv: stack-allocated [3][]const u8 — no heap allocation for the argv slice
 // reapZombies allocator param: currently unused, reserved for a future pidfd-based implementation
+// .failed: process exceeded max_restarts and will not be restarted; .crashed: single exit, may retry
