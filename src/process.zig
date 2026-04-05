@@ -174,3 +174,4 @@ pub const Process = struct {
 // pre_stop hook argv: stack-allocated [3][]const u8 — no heap allocation for the argv slice
 // reapZombies allocator param: currently unused, reserved for a future pidfd-based implementation
 // .failed: process exceeded max_restarts and will not be restarted; .crashed: single exit, may retry
+// stdout_behavior and stderr_behavior are .Pipe so the supervisor can stream logs
