@@ -120,3 +120,4 @@ fn rotate(self: *Logger) !void {
 // dest: falls back to stderr when self.file is null; no crash if openFile was never called
 // Level.str(): all labels are padded to 5 chars ("INFO ", "WARN ") for aligned log lines
 // openFile dupes path: caller's slice may be stack-allocated; Logger outlives the call frame
+// written: tracks cumulative byte count of log output; compared to max_bytes for rotation
